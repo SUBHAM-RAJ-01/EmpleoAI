@@ -1,8 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Briefcase, DollarSign, Calendar, MapPin, FileText, Sparkles, TrendingUp, Edit2, Save } from 'lucide-react'
+import { X, Briefcase, DollarSign, Calendar, MapPin, FileText, Sparkles, TrendingUp, Edit2, Save, ChevronDown, Check } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+
+const STATUSES = [
+  { id: 'discovered', label: 'Discovered', color: 'gray', icon: '🔍' },
+  { id: 'applied', label: 'Applied', color: 'blue', icon: '📝' },
+  { id: 'assessment', label: 'Assessment', color: 'yellow', icon: '📋' },
+  { id: 'interview', label: 'Interview', color: 'purple', icon: '🎤' },
+  { id: 'offer', label: 'Offer', color: 'green', icon: '🎉' },
+  { id: 'rejected', label: 'Rejected', color: 'red', icon: '❌' },
+]
 
 export default function ApplicationDetail({ application, onClose }) {
   const [tailoring, setTailoring] = useState(false)
@@ -13,7 +22,37 @@ export default function ApplicationDetail({ application, onClose }) {
   const [description, setDescription] = useState(application.description || '')
   const [requirements, setRequirements] = useState(application.requirements || '')
   const [saving, setSaving] = useState(false)
+  const [currentStatus, setCurrentStatus] = useState(application.status || 'discovered')
+  const [showStatusMenu, setShowStatusMenu] = useState(false)
+  const [updatingStatus, setUpdatingStatus] = useState(false)
   const supabase = createClient()
+
+  const handleStatusChange = async (newStatus) => {
+    if (newStatus === currentStatus) {
+      setShowStatusMenu(false)
+      return
+    }
+
+    setUpdatingStatus(true)
+    setError('')
+    
+    try {
+      const { error: updateError } = await supabase
+        .from('applications')
+        .update({ status: newStatus })
+        .eq('id', application.id)
+
+      if (updateError) throw updateError
+
+      setCurrentStatus(newStatus)
+      setShowStatusMenu(false)
+    } catch (err) {
+      console.error('Error updating status:', err)
+      setError('Failed to update status')
+    } finally {
+      setUpdatingStatus(false)
+    }
+  }
 
   const handleSave = async (field, value) => {
     setSaving(true)
@@ -118,6 +157,15 @@ export default function ApplicationDetail({ application, onClose }) {
         </div>
 
         <div className="p-8 space-y-6">
+          {/* Status Selector */}
+          <StatusSelector
+            currentStatus={currentStatus}
+            showMenu={showStatusMenu}
+            setShowMenu={setShowStatusMenu}
+            onStatusChange={handleStatusChange}
+            updating={updatingStatus}
+          />
+
           {/* Info Cards */}
           <div className="grid md:grid-cols-2 gap-4">
             <InfoCard icon={Briefcase} label="Role" value={application.role} color="primary" />
@@ -242,6 +290,84 @@ function EditableSection({ title, icon: Icon, value, onChange, editing, onEdit, 
           {value || <span className="text-gray-400 italic">No {title.toLowerCase()} added. Click edit to add.</span>}
         </p>
       )}
+    </div>
+  )
+}
+
+function StatusSelector({ currentStatus, showMenu, setShowMenu, onStatusChange, updating }) {
+  const currentStatusData = STATUSES.find(s => s.id === currentStatus) || STATUSES[0]
+  
+  const statusColors = {
+    gray: 'bg-gray-100 text-gray-700 border-gray-300',
+    blue: 'bg-blue-100 text-blue-700 border-blue-300',
+    yellow: 'bg-yellow-100 text-yellow-700 border-yellow-300',
+    purple: 'bg-purple-100 text-purple-700 border-purple-300',
+    green: 'bg-green-100 text-green-700 border-green-300',
+    red: 'bg-red-100 text-red-700 border-red-300',
+  }
+
+  return (
+    <div className="relative">
+      <div className="flex items-center justify-between">
+        <h3 className="font-bold text-gray-900 text-lg">Application Status</h3>
+        <div className="relative">
+          <button
+            onClick={() => setShowMenu(!showMenu)}
+            disabled={updating}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 font-semibold transition-all ${statusColors[currentStatusData.color]} hover:shadow-md disabled:opacity-50`}
+          >
+            <span>{currentStatusData.icon}</span>
+            <span>{currentStatusData.label}</span>
+            <ChevronDown className={`w-4 h-4 transition-transform ${showMenu ? 'rotate-180' : ''}`} />
+          </button>
+
+          {showMenu && (
+            <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-50 animate-slide-down">
+              <p className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">Change Status</p>
+              {STATUSES.map((status) => (
+                <button
+                  key={status.id}
+                  onClick={() => onStatusChange(status.id)}
+                  className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-gray-50 transition-colors ${
+                    status.id === currentStatus ? 'bg-gray-50' : ''
+                  }`}
+                >
+                  <span className="text-xl">{status.icon}</span>
+                  <span className="font-medium text-gray-900">{status.label}</span>
+                  {status.id === currentStatus && (
+                    <Check className="w-4 h-4 text-green-600 ml-auto" />
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Status Progress Bar */}
+      <div className="mt-4 flex items-center gap-1">
+        {STATUSES.slice(0, 5).map((status, index) => {
+          const currentIndex = STATUSES.findIndex(s => s.id === currentStatus)
+          const isActive = index <= currentIndex && currentStatus !== 'rejected'
+          const isRejected = currentStatus === 'rejected'
+          
+          return (
+            <div key={status.id} className="flex-1 flex items-center">
+              <div
+                className={`h-2 flex-1 rounded-full transition-all ${
+                  isRejected ? 'bg-red-200' :
+                  isActive ? 'bg-gradient-to-r from-primary-500 to-blue-500' : 'bg-gray-200'
+                }`}
+              />
+              {index < 4 && <div className="w-1" />}
+            </div>
+          )
+        })}
+      </div>
+      <div className="mt-2 flex justify-between text-xs text-gray-500">
+        <span>Discovered</span>
+        <span>Offer</span>
+      </div>
     </div>
   )
 }
