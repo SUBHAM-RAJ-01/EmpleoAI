@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Mail, Lock, AlertCircle } from 'lucide-react'
 
 export default function LoginPage() {
@@ -44,7 +45,7 @@ export default function LoginPage() {
         <div className="flex justify-center mb-8">
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-primary-600 to-blue-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
-            <img src="/logo.png" alt="EmpleoAI" className="relative w-20 h-20 rounded-2xl shadow-xl transform group-hover:scale-105 transition-transform duration-300" />
+            <Image src="/logo.png" alt="EmpleoAI" width={80} height={80} className="relative rounded-2xl shadow-xl transform group-hover:scale-105 transition-transform duration-300" />
           </div>
         </div>
         <h2 className="text-center text-4xl font-bold text-gray-900 mb-2">
@@ -54,7 +55,7 @@ export default function LoginPage() {
           Sign in to continue your placement journey
         </p>
         <p className="text-center text-sm text-gray-600">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link href="/auth/signup" className="text-primary-600 hover:text-primary-700 font-semibold transition-colors">
             Sign up for free →
           </Link>
