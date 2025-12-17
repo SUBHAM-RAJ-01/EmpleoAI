@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Github, Twitter, Linkedin, Mail } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -18,7 +19,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <img src="/logo.png" alt="EmpleoAI" className="w-8 h-8 rounded-lg" />
+              <Image src="/logo.png" alt="EmpleoAI" width={32} height={32} className="rounded-lg" />
               <span className="text-xl font-bold text-gray-900">EmpleoAI</span>
             </div>
             <p className="text-gray-600 mb-4 max-w-md">

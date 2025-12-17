@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -14,6 +14,14 @@ export function SessionProvider({ children }) {
   const router = useRouter()
   const supabase = createClient()
 
+  const handleAuthChange = useCallback((event, session) => {
+    setSession(session)
+    setLoading(false)
+    if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+      router.refresh()
+    }
+  }, [router])
+
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -22,18 +30,10 @@ export function SessionProvider({ children }) {
     })
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session)
-        setLoading(false)
-        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
-          router.refresh()
-        }
-      }
-    )
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthChange)
 
     return () => subscription.unsubscribe()
-  }, [])
+  }, [supabase.auth, handleAuthChange])
 
   return (
     <SessionContext.Provider value={{ session, loading }}>

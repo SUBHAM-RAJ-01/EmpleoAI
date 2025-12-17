@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Briefcase, Mail, FileText, TrendingUp, CheckCircle, ArrowRight, Sparkles, Zap, Target, Users } from 'lucide-react'
 
 export default function LandingPage() {
@@ -11,7 +12,7 @@ export default function LandingPage() {
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-primary-600 to-blue-600 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-500"></div>
-                <img src="/logo.png" alt="EmpleoAI" className="relative w-10 h-10 rounded-xl" />
+                <Image src="/logo.png" alt="EmpleoAI" width={40} height={40} className="relative rounded-xl" />
               </div>
               <span className="text-2xl font-bold gradient-text">EmpleoAI</span>
             </Link>
@@ -207,7 +208,7 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <img src="/logo.png" alt="EmpleoAI" className="w-10 h-10 rounded-xl" />
+              <Image src="/logo.png" alt="EmpleoAI" width={40} height={40} className="rounded-xl" />
               <span className="text-2xl font-bold">EmpleoAI</span>
             </div>
             <p className="text-gray-400 mb-6 max-w-md leading-relaxed">

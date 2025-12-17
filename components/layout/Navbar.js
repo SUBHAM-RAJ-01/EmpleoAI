@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Menu, X, LogOut, User, Settings } from 'lucide-react'
@@ -26,7 +27,7 @@ export default function Navbar({ user }) {
             <Link href="/dashboard" className="flex items-center gap-3 group">
               <div className="relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-primary-600 to-blue-600 rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-300"></div>
-                <img src="/logo.png" alt="EmpleoAI" className="relative w-8 h-8 rounded-lg transition-transform group-hover:scale-110" />
+                <Image src="/logo.png" alt="EmpleoAI" width={32} height={32} className="relative rounded-lg transition-transform group-hover:scale-110" />
               </div>
               <span className="text-xl font-bold gradient-text">EmpleoAI</span>
             </Link>
