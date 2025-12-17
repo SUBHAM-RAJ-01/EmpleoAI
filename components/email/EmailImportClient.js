@@ -10,7 +10,14 @@ export default function EmailImportClient({ user }) {
   const [extracting, setExtracting] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState('')
+  const [charCount, setCharCount] = useState(0)
   const supabase = createClient()
+
+  const handleContentChange = (e) => {
+    const content = e.target.value
+    setEmailContent(content)
+    setCharCount(content.length)
+  }
 
   const handleExtract = async () => {
     if (!emailContent.trim()) {
@@ -29,7 +36,10 @@ export default function EmailImportClient({ user }) {
         body: JSON.stringify({ emailContent }),
       })
 
-      if (!response.ok) throw new Error('Failed to extract job details')
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to extract job details')
+      }
 
       const jobData = await response.json()
 
@@ -38,8 +48,8 @@ export default function EmailImportClient({ user }) {
         .from('applications')
         .insert({
           user_id: user.id,
-          company: jobData.company,
-          role: jobData.role,
+          company: jobData.company || 'Unknown Company',
+          role: jobData.role || 'Unknown Role',
           package: jobData.package,
           deadline: jobData.deadline,
           assessment_date: jobData.assessmentDate,
@@ -56,8 +66,13 @@ export default function EmailImportClient({ user }) {
 
       setResult(data)
       setEmailContent('')
+      
+      // Auto-redirect after 2 seconds
+      setTimeout(() => {
+        window.location.href = '/applications'
+      }, 2000)
     } catch (err) {
-      setError(err.message)
+      setError(err.message || 'An error occurred while extracting job details')
     } finally {
       setExtracting(false)
     }
@@ -79,20 +94,48 @@ export default function EmailImportClient({ user }) {
             <h2 className="text-xl font-semibold text-gray-900">Email Content</h2>
           </div>
 
-          <textarea
-            value={emailContent}
-            onChange={(e) => setEmailContent(e.target.value)}
-            placeholder="Paste your placement email here..."
-            className="input min-h-[300px] resize-y font-mono text-sm"
-          />
+          <div className="relative">
+            <textarea
+              value={emailContent}
+              onChange={handleContentChange}
+              placeholder="Paste your placement email here...
+
+Example:
+Subject: Placement Opportunity - Software Engineer at Google
+
+Dear Students,
+We are pleased to announce...
+
+Company: Google
+Position: Software Engineer
+Package: $120,000/year
+Deadline: December 31, 2024"
+              className="input min-h-[300px] resize-y font-mono text-sm focus:ring-2 focus:ring-primary-500 transition-all"
+            />
+            <div className="absolute bottom-3 right-3 text-xs text-gray-400 bg-white px-2 py-1 rounded">
+              {charCount} characters
+            </div>
+          </div>
 
           <button
             onClick={handleExtract}
-            disabled={extracting}
-            className="btn-primary mt-4 w-full flex items-center justify-center gap-2"
+            disabled={extracting || !emailContent.trim()}
+            className="btn-primary mt-4 w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
           >
-            <Sparkles className="w-5 h-5" />
-            {extracting ? 'Extracting...' : 'Extract Job Details'}
+            {extracting ? (
+              <>
+                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Extracting with AI...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                <span>Extract Job Details</span>
+              </>
+            )}
           </button>
 
           {error && (
@@ -103,19 +146,33 @@ export default function EmailImportClient({ user }) {
           )}
 
           {result && (
-            <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4">
+            <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4 animate-slide-up">
               <div className="flex items-start gap-3 mb-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
+                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5 animate-bounce" />
+                <div className="flex-1">
                   <p className="font-medium text-green-900">Job extracted successfully!</p>
                   <p className="text-sm text-green-700 mt-1">
                     {result.company} - {result.role}
                   </p>
+                  {result.package && (
+                    <p className="text-sm text-green-700 mt-1">
+                      💰 {result.package}
+                    </p>
+                  )}
+                  {result.deadline && (
+                    <p className="text-sm text-green-700 mt-1">
+                      📅 Deadline: {new Date(result.deadline).toLocaleDateString()}
+                    </p>
+                  )}
                 </div>
               </div>
-              <a href="/applications" className="text-sm text-green-700 hover:text-green-800 font-medium">
-                View in Applications →
-              </a>
+              <div className="flex items-center gap-2 text-sm text-green-700">
+                <span>Redirecting to applications...</span>
+                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
             </div>
           )}
         </div>

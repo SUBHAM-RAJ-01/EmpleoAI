@@ -12,13 +12,20 @@ export async function POST(request) {
       )
     }
 
+    console.log('Extracting job from email, content length:', emailContent.length)
+    
     const jobData = await extractJobFromEmail(emailContent)
+    
+    console.log('Job data extracted:', jobData)
 
     return NextResponse.json(jobData)
   } catch (error) {
     console.error('Error in extract-job API:', error)
+    console.error('Error message:', error.message)
+    console.error('Error stack:', error.stack)
+    
     return NextResponse.json(
-      { error: 'Failed to extract job details' },
+      { error: error.message || 'Failed to extract job details' },
       { status: 500 }
     )
   }

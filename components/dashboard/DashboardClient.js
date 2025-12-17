@@ -20,15 +20,15 @@ export default function DashboardClient({ user, applications, profile }) {
     .slice(0, 5)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-gray-50">
       <Navbar user={user} />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome back, {profile?.full_name || user.email}
+        <div className="mb-10 animate-slide-up">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Welcome back, <span className="gradient-text">{profile?.full_name || user.email?.split('@')[0]}</span>
           </h1>
-          <p className="text-gray-600 mt-2">Track your placement journey</p>
+          <p className="text-lg text-gray-600">Track your placement journey and land your dream job</p>
         </div>
 
         {/* Stats Grid */}
@@ -38,24 +38,28 @@ export default function DashboardClient({ user, applications, profile }) {
             value={stats.total}
             icon={<Briefcase className="w-6 h-6" />}
             color="blue"
+            index={0}
           />
           <StatsCard
             title="Interviews"
             value={stats.interviews}
             icon={<Calendar className="w-6 h-6" />}
             color="green"
+            index={1}
           />
           <StatsCard
             title="Offers"
             value={stats.offers}
             icon={<TrendingUp className="w-6 h-6" />}
             color="purple"
+            index={2}
           />
           <StatsCard
             title="Pending"
             value={stats.pending}
             icon={<FileText className="w-6 h-6" />}
             color="orange"
+            index={3}
           />
         </div>
 

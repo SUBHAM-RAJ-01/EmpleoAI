@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Menu, X, LogOut, User, Settings } from 'lucide-react'
@@ -20,26 +19,29 @@ export default function Navbar({ user }) {
   }
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav className="glass sticky top-0 z-50 border-b border-gray-200/50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-8">
-            <Link href="/dashboard" className="flex items-center gap-3">
-              <Image src="/logo.png" alt="EmpleoAI" width={32} height={32} className="rounded-lg" />
-              <span className="text-xl font-semibold text-gray-900">EmpleoAI</span>
+            <Link href="/dashboard" className="flex items-center gap-3 group">
+              <div className="relative">
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary-600 to-blue-600 rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-300"></div>
+                <img src="/logo.png" alt="EmpleoAI" className="relative w-8 h-8 rounded-lg transition-transform group-hover:scale-110" />
+              </div>
+              <span className="text-xl font-bold gradient-text">EmpleoAI</span>
             </Link>
             
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/dashboard" className="text-gray-700 hover:text-gray-900 transition-colors">
+              <Link href="/dashboard" className="text-gray-700 hover:text-primary-600 transition-colors font-medium">
                 Dashboard
               </Link>
-              <Link href="/applications" className="text-gray-700 hover:text-gray-900 transition-colors">
+              <Link href="/applications" className="text-gray-700 hover:text-primary-600 transition-colors font-medium">
                 Applications
               </Link>
-              <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors">
+              <Link href="/resume" className="text-gray-700 hover:text-primary-600 transition-colors font-medium">
                 Resume
               </Link>
-              <Link href="/email-import" className="text-gray-700 hover:text-gray-900 transition-colors">
+              <Link href="/email-import" className="text-gray-700 hover:text-primary-600 transition-colors font-medium">
                 Import
               </Link>
             </div>
@@ -49,24 +51,31 @@ export default function Navbar({ user }) {
             <div className="relative">
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-white/50 transition-all duration-200 border border-transparent hover:border-primary-200"
               >
-                <User className="w-5 h-5 text-gray-600" />
-                <span className="text-sm text-gray-700">{user.email}</span>
+                <div className="w-9 h-9 bg-gradient-to-br from-primary-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md">
+                  {user.email?.[0]?.toUpperCase()}
+                </div>
+                <span className="text-sm font-semibold text-gray-700">{user.email}</span>
               </button>
               
               {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1">
+                <div className="absolute right-0 mt-2 w-56 glass rounded-xl shadow-2xl border border-gray-200/50 py-2 animate-slide-down">
+                  <div className="px-4 py-3 border-b border-gray-100">
+                    <p className="text-sm font-medium text-gray-900">Account</p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  </div>
                   <Link
                     href="/profile"
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                    className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={() => setUserMenuOpen(false)}
                   >
                     <Settings className="w-4 h-4" />
                     Profile Settings
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                    className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
                   >
                     <LogOut className="w-4 h-4" />
                     Sign Out
@@ -86,14 +95,14 @@ export default function Navbar({ user }) {
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-200 bg-white">
-          <div className="px-4 py-4 space-y-3">
-            <Link href="/dashboard" className="block py-2 text-gray-700">Dashboard</Link>
-            <Link href="/applications" className="block py-2 text-gray-700">Applications</Link>
-            <Link href="/resume" className="block py-2 text-gray-700">Resume</Link>
-            <Link href="/email-import" className="block py-2 text-gray-700">Import</Link>
-            <Link href="/profile" className="block py-2 text-gray-700">Profile</Link>
-            <button onClick={handleLogout} className="block py-2 text-red-600 w-full text-left">
+        <div className="md:hidden border-t border-gray-200/50 glass animate-slide-down">
+          <div className="px-4 py-4 space-y-2">
+            <Link href="/dashboard" className="block py-3 px-4 text-gray-700 hover:bg-primary-50 hover:text-primary-600 rounded-lg transition-colors font-medium">Dashboard</Link>
+            <Link href="/applications" className="block py-3 px-4 text-gray-700 hover:bg-primary-50 hover:text-primary-600 rounded-lg transition-colors font-medium">Applications</Link>
+            <Link href="/resume" className="block py-3 px-4 text-gray-700 hover:bg-primary-50 hover:text-primary-600 rounded-lg transition-colors font-medium">Resume</Link>
+            <Link href="/email-import" className="block py-3 px-4 text-gray-700 hover:bg-primary-50 hover:text-primary-600 rounded-lg transition-colors font-medium">Import</Link>
+            <Link href="/profile" className="block py-3 px-4 text-gray-700 hover:bg-primary-50 hover:text-primary-600 rounded-lg transition-colors font-medium">Profile</Link>
+            <button onClick={handleLogout} className="block py-3 px-4 text-red-600 hover:bg-red-50 rounded-lg transition-colors w-full text-left font-medium">
               Sign Out
             </button>
           </div>

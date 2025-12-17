@@ -101,6 +101,11 @@ CREATE POLICY "Users can insert own resumes"
   ON resumes FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
+CREATE POLICY "Users can update own resumes"
+  ON resumes FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
 CREATE POLICY "Users can delete own resumes"
   ON resumes FOR DELETE
   USING (auth.uid() = user_id);
