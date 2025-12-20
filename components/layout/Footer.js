@@ -64,18 +64,18 @@ export default function Footer() {
             <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
             <ul className="space-y-3">
               <li>
+                <a href="https://github.com/SUBHAM-RAJ-01/EmpleoAI/blob/main/DOCUMENTATION.md" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600 transition-colors">
+                  Documentation
+                </a>
+              </li>
+              <li>
                 <a href="https://github.com/SUBHAM-RAJ-01/EmpleoAI" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600 transition-colors">
                   GitHub
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors">
+                <a href="https://github.com/SUBHAM-RAJ-01/EmpleoAI/issues" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600 transition-colors">
                   Support
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors">
-                  Privacy Policy
                 </a>
               </li>
             </ul>

@@ -202,6 +202,8 @@ function StepCard({ number, icon, title, description }) {
 }
 
 function Footer() {
+  const currentYear = new Date().getFullYear()
+  
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -227,15 +229,17 @@ function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-4">Resources</h3>
             <ul className="space-y-3 text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Support</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
+              <li><a href="https://github.com/SUBHAM-RAJ-01/EmpleoAI/blob/main/DOCUMENTATION.md" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Documentation</a></li>
+              <li><a href="https://github.com/SUBHAM-RAJ-01/EmpleoAI" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a></li>
+              <li><a href="https://github.com/SUBHAM-RAJ-01/EmpleoAI/issues" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Support</a></li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm">© 2024 EmpleoAI. All rights reserved.</p>
-          <p className="text-gray-500 text-sm mt-4 md:mt-0">Built with ❤️ for students</p>
+        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-gray-400 text-sm">© {currentYear} EmpleoAI. All rights reserved.</p>
+          <p className="text-gray-500 text-sm">
+            Built with ❤️ by <a href="https://github.com/SUBHAM-RAJ-01" target="_blank" rel="noopener noreferrer" className="text-primary-400 hover:text-primary-300 transition-colors font-semibold">Subham Raj</a>
+          </p>
         </div>
       </div>
     </footer>
