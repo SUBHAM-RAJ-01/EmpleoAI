@@ -144,19 +144,20 @@ export default function ApplicationDetail({ application, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in">
-      <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
-        {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-primary-600 via-blue-600 to-purple-600 text-white p-8 flex items-center justify-between rounded-t-3xl shadow-lg">
-          <div className="flex-1">
-            <h2 className="text-3xl font-bold mb-1">{application.company}</h2>
-            <p className="text-primary-100 text-lg">{application.role}</p>
+      <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl animate-scale-in flex flex-col">
+        {/* Header - Fixed at top */}
+        <div className="bg-gradient-to-r from-primary-600 via-blue-600 to-purple-600 text-white p-6 flex items-center justify-between rounded-t-3xl shadow-lg flex-shrink-0">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-2xl font-bold mb-1 truncate">{application.company}</h2>
+            <p className="text-primary-100 text-lg truncate">{application.role}</p>
           </div>
-          <button onClick={onClose} className="p-3 hover:bg-white/20 rounded-xl transition-all">
+          <button onClick={onClose} className="p-3 hover:bg-white/20 rounded-xl transition-all ml-4 flex-shrink-0">
             <X className="w-6 h-6" />
           </button>
         </div>
 
-        <div className="p-8 space-y-6">
+        {/* Scrollable Content */}
+        <div className="p-6 space-y-6 overflow-y-auto flex-1">
           {/* Status Selector */}
           <StatusSelector
             currentStatus={currentStatus}

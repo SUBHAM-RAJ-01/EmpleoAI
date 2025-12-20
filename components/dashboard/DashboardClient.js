@@ -3,10 +3,13 @@
 import { useState } from 'react'
 import Navbar from '@/components/layout/Navbar'
 import StatsCard from '@/components/dashboard/StatsCard'
-import { Briefcase, Calendar, FileText, TrendingUp } from 'lucide-react'
+import FeatureTour, { useTour } from '@/components/tour/FeatureTour'
+import { Briefcase, Calendar, FileText, TrendingUp, HelpCircle } from 'lucide-react'
 import Link from 'next/link'
 
 export default function DashboardClient({ user, applications, profile }) {
+  const { showTour, completeTour, resetTour } = useTour()
+  
   const stats = {
     total: applications.length,
     interviews: applications.filter(app => app.status === 'interview').length,
@@ -23,12 +26,25 @@ export default function DashboardClient({ user, applications, profile }) {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-gray-50">
       <Navbar user={user} />
       
+      {/* Feature Tour */}
+      {showTour && <FeatureTour onComplete={completeTour} />}
+      
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-10 animate-slide-up">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Welcome back, <span className="gradient-text">{profile?.full_name || user.email?.split('@')[0]}</span>
-          </h1>
-          <p className="text-lg text-gray-600">Track your placement journey and land your dream job</p>
+        <div className="mb-10 animate-slide-up flex items-start justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              Welcome back, <span className="gradient-text">{profile?.full_name || user.email?.split('@')[0]}</span>
+            </h1>
+            <p className="text-lg text-gray-600">Track your placement journey and land your dream job</p>
+          </div>
+          <button
+            onClick={resetTour}
+            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+            title="Show feature tour"
+          >
+            <HelpCircle className="w-5 h-5" />
+            <span className="hidden sm:inline">Tour</span>
+          </button>
         </div>
 
         {/* Stats Grid */}
