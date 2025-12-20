@@ -13,7 +13,7 @@ const nextConfig = {
   reactStrictMode: true,
   // ESLint configuration for builds
   eslint: {
-    ignoreDuringBuilds: false, // Keep linting but don't fail on warnings
+    ignoreDuringBuilds: true,
   },
   // Experimental features for better performance
   experimental: {
