@@ -373,29 +373,63 @@ function StatusSelector({ currentStatus, showMenu, setShowMenu, onStatusChange, 
 }
 
 function AnalysisResults({ analysis }) {
+  const getScoreColor = (score) => {
+    if (score >= 80) return 'from-green-500 to-emerald-500'
+    if (score >= 60) return 'from-primary-500 to-blue-500'
+    if (score >= 40) return 'from-yellow-500 to-orange-500'
+    return 'from-red-500 to-pink-500'
+  }
+
+  const getScoreLabel = (score) => {
+    if (score >= 80) return 'Excellent Match!'
+    if (score >= 60) return 'Good Match'
+    if (score >= 40) return 'Fair Match'
+    return 'Needs Work'
+  }
+
   return (
-    <div className="bg-gradient-to-br from-primary-50 to-blue-50 border-2 border-primary-200 rounded-2xl p-6 space-y-6 animate-slide-up">
-      {/* Score */}
-      <div>
-        <h3 className="font-bold text-primary-900 mb-3 text-lg">Match Score</h3>
-        <div className="flex items-center gap-4">
-          <div className="flex-1 bg-gray-200 rounded-full h-4 overflow-hidden">
-            <div
-              className="bg-gradient-to-r from-primary-600 to-blue-600 h-4 rounded-full transition-all duration-1000"
-              style={{ width: `${analysis.score}%` }}
+    <div className="bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200 rounded-2xl p-6 space-y-6 animate-slide-up shadow-lg">
+      {/* Score Section */}
+      <div className="text-center pb-6 border-b border-gray-200">
+        <h3 className="font-bold text-gray-700 mb-4 text-sm uppercase tracking-wide">Resume Match Score</h3>
+        <div className="relative inline-flex items-center justify-center">
+          <svg className="w-32 h-32 transform -rotate-90">
+            <circle cx="64" cy="64" r="56" stroke="#e5e7eb" strokeWidth="12" fill="none" />
+            <circle
+              cx="64"
+              cy="64"
+              r="56"
+              stroke="url(#scoreGradient)"
+              strokeWidth="12"
+              fill="none"
+              strokeLinecap="round"
+              strokeDasharray={`${(analysis.score / 100) * 352} 352`}
+              className="transition-all duration-1000"
             />
+            <defs>
+              <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#3b82f6" />
+                <stop offset="100%" stopColor="#8b5cf6" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-4xl font-bold text-gray-900">{analysis.score}%</span>
+            <span className="text-xs text-gray-500 font-medium">{getScoreLabel(analysis.score)}</span>
           </div>
-          <span className="text-3xl font-bold gradient-text">{analysis.score}%</span>
         </div>
       </div>
 
       {/* Keywords */}
       {analysis.keywords?.length > 0 && (
         <div>
-          <h3 className="font-bold text-primary-900 mb-3">Key Keywords</h3>
+          <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <span className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">🔑</span>
+            Matching Keywords
+          </h3>
           <div className="flex flex-wrap gap-2">
             {analysis.keywords.map((keyword, i) => (
-              <span key={i} className="px-3 py-1.5 bg-white border-2 border-primary-200 text-primary-700 rounded-full text-sm font-medium">
+              <span key={i} className="px-3 py-1.5 bg-blue-50 border border-blue-200 text-blue-700 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors">
                 {keyword}
               </span>
             ))}
@@ -403,45 +437,54 @@ function AnalysisResults({ analysis }) {
         </div>
       )}
 
-      {/* Suggestions */}
-      {analysis.suggestions?.length > 0 && (
-        <div>
-          <h3 className="font-bold text-primary-900 mb-3">Suggestions</h3>
-          <ul className="space-y-2">
-            {analysis.suggestions.map((suggestion, i) => (
-              <li key={i} className="flex items-start gap-3 text-primary-800 bg-white rounded-lg p-3">
-                <span className="text-primary-600 font-bold">•</span>
-                <span>{suggestion}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       {/* Strengths */}
       {analysis.strengths?.length > 0 && (
         <div>
-          <h3 className="font-bold text-green-900 mb-3">Strengths</h3>
+          <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <span className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">💪</span>
+            Your Strengths
+          </h3>
           <ul className="space-y-2">
             {analysis.strengths.map((strength, i) => (
-              <li key={i} className="flex items-start gap-3 text-green-800 bg-green-50 rounded-lg p-3">
-                <span className="text-green-600 font-bold">✓</span>
-                <span>{strength}</span>
+              <li key={i} className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-3">
+                <span className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">✓</span>
+                <span className="text-green-800">{strength}</span>
               </li>
             ))}
           </ul>
         </div>
       )}
 
-      {/* Gaps */}
+      {/* Gaps / Areas to Improve */}
       {analysis.gaps?.length > 0 && (
         <div>
-          <h3 className="font-bold text-orange-900 mb-3">Areas to Improve</h3>
+          <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <span className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">📋</span>
+            Areas to Address
+          </h3>
           <ul className="space-y-2">
             {analysis.gaps.map((gap, i) => (
-              <li key={i} className="flex items-start gap-3 text-orange-800 bg-orange-50 rounded-lg p-3">
-                <span className="text-orange-600 font-bold">!</span>
-                <span>{gap}</span>
+              <li key={i} className="flex items-start gap-3 bg-orange-50 border border-orange-200 rounded-xl p-3">
+                <span className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">!</span>
+                <span className="text-orange-800">{gap}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Suggestions */}
+      {analysis.suggestions?.length > 0 && (
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <span className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">💡</span>
+            Improvement Tips
+          </h3>
+          <ul className="space-y-2">
+            {analysis.suggestions.map((suggestion, i) => (
+              <li key={i} className="flex items-start gap-3 bg-purple-50 border border-purple-200 rounded-xl p-3">
+                <span className="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">{i + 1}</span>
+                <span className="text-purple-800">{suggestion}</span>
               </li>
             ))}
           </ul>
