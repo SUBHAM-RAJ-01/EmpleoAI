@@ -3,14 +3,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Github, Twitter, Linkedin, Mail } from 'lucide-react'
-import { useEffect, useState } from 'react'
 
 export default function Footer() {
-  const [currentYear, setCurrentYear] = useState(2024)
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear())
-  }, [])
+  const currentYear = new Date().getFullYear()
 
   return (
     <footer className="bg-white border-t border-gray-200 mt-auto">
@@ -27,14 +22,14 @@ export default function Footer() {
               tailor resumes, and track their placement journey.
             </p>
             <div className="flex gap-4">
+              <a href="https://github.com/SUBHAM-RAJ-01/EmpleoAI" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary-600 transition-colors">
+                <Github className="w-5 h-5" />
+              </a>
               <a href="#" className="text-gray-400 hover:text-primary-600 transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-primary-600 transition-colors">
                 <Linkedin className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary-600 transition-colors">
-                <Github className="w-5 h-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-primary-600 transition-colors">
                 <Mail className="w-5 h-5" />
@@ -69,8 +64,8 @@ export default function Footer() {
             <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-gray-600 hover:text-primary-600 transition-colors">
-                  Documentation
+                <a href="https://github.com/SUBHAM-RAJ-01/EmpleoAI" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600 transition-colors">
+                  GitHub
                 </a>
               </li>
               <li>
@@ -87,13 +82,20 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-600 text-sm">
             © {currentYear} EmpleoAI. All rights reserved.
           </p>
-          <p className="text-gray-500 text-sm mt-2 md:mt-0">
-            Built with ❤️ for students, by students
-          </p>
+          <div className="flex items-center gap-4 text-sm text-gray-600">
+            <p>
+              Built with ❤️ by <a href="https://github.com/SUBHAM-RAJ-01" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary-600 hover:text-primary-700 transition-colors">Subham Raj</a>
+            </p>
+            <span className="text-gray-300">•</span>
+            <a href="https://github.com/SUBHAM-RAJ-01/EmpleoAI" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary-600 transition-colors">
+              <Github className="w-4 h-4" />
+              <span>Contribute</span>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
